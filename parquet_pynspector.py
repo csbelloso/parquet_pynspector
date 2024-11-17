@@ -36,10 +36,10 @@ def clearscr():
 
 def banner():
     clearscr()
-    print('[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][]')
-    print('[][][]                   PARQUET FILE INSPECTOR                           [][][]')
-    print('[][][]                           by CSB                                   [][][]')
-    print('[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][]\n')
+    print('[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][]')
+    print('[][][]                   PARQUET FILE PY-NSPECTOR                     [][][]')
+    print('[][][]                           by CSB                               [][][]')
+    print('[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][]\n')
 
 # Cargamos el archivo Parquet utilizando memory map
 
@@ -56,7 +56,7 @@ def metadatos (filename):
     print("\tNombre del fichero: ", filename)
     print("\tTamaño en Mb: ",round(tamanio/(1024*1024),2))
     print("\tVersión de PARQUET: ",metadata.format_version)
-    print("\tCreado por: ",metadata.created_by)
+    print("\tCreado por: ",metadata.created_by[0:26])
     print("\tNúmero de Columnas: ",metadata.num_columns)
     print("\tNúmero de Filas: ",metadata.num_rows,"\n")
 
@@ -74,17 +74,18 @@ def main(filename):
     respuesta = input ("\n\nQuieres exportar el contenido en CSV? [S]/[N]: ")
     match respuesta:
         case "s" | "S":
-            print("\n\n\tSe va a Exportar en CSV")
             exportcsv(filename)
+            print("\n\n\tFichero CSV creado. Saliendo.\n")
+            exit(0)
         case "n" | "N":
-            print ("\n\n\tNo se exporta en CSV, saliendo.")
+            print ("\n\n\tNo se exporta en CSV. Saliendo.\n")
             exit(0)
         case _:
             main(filename)
             
 def exportcsv (filename):
     # Leer los archivos Parquet utilizando memory map
-    output_file=filename+"_CSV.csv"
+    output_file=filename+"CSV.csv"
     dfs = []
 
     with pa.memory_map(filename, 'r') as source:
